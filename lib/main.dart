@@ -1,24 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:window_manager/window_manager.dart';
 
 
 void main() async{
 
-  WidgetsFlutterBinding.ensureInitialized();
-  // 必须加上这一行。
-  await windowManager.ensureInitialized();
-
-  WindowOptions windowOptions = WindowOptions(
-    size: Size(800, 600),
-    center: true,
-    backgroundColor: Colors.transparent,
-    skipTaskbar: false,
-    titleBarStyle: TitleBarStyle.hidden,
-  );
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.show();
-    await windowManager.focus();
-  });
 
 
   runApp(const MainPage());
@@ -40,14 +24,16 @@ class MainPage extends StatelessWidget {
   }
 }
 
+
+
+
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
   final String title;
   @override
   State<HomePage> createState() => _HomePageState();
 }
-
-
 
 
 class _HomePageState extends State<HomePage> {
@@ -253,38 +239,13 @@ class _HomePageState extends State<HomePage> {
                       Column(
                         children: [
                           SizedBox(
-                            height: 300,
+                            height: 50,
                           ),
-                          SizedBox(
-
-                              width: 200,
-                              height: link_button_hight,
-                              child: InkWell(
-                                onTap: (){
-                                  if(link_button_hight == 50){
-                                    link_button_hight = 200;
-                                  }else{
-                                    link_button_hight = 50;
-                                  }
-                                  setState(() {
-
-                                  });
-                                },
-                                child: Card(
-                                    color: Colors.white,
-                                    child: Center(
-                                      child: Text(
-                                        '裝置未連結',
-                                        style: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black38,
-                                        ),
-                                      ),
-                                    )
-                                ),
-                              )
+                          Container(
+                            padding: EdgeInsets.all(50),
+                            width: 1300,
+                            height: 700,
+                            child: keyboard(),
                           )
                         ],
                       ),
@@ -455,10 +416,86 @@ class keyboard extends StatefulWidget{
 
 class _keyboard extends State<keyboard> {
 
+
+
+
+
+  List<List<String>> keyboard_key = [
+    ['esc','f1','f2','f3','f4','f5','f6','f7','f8','f9','f10','f11','f12','back'],
+    ['Tab','Q','W','E','R','T','Y','U','I','O','P','[{',']}','\\|','Del'],
+    ['Capslock','A','S','D','F','G','H','J','K','L',';:','\n','Enter','Paup'],
+    ['Shift','Z','X','C','V','B','N','M',',<','.>','\/？','Shift','上'],
+    ['Ctrl','Win','Alt','Space','Alt','Fn','Ctrl','左','下','右']
+  ];
+
+  List<List<String>> keyboard_cap_width = [
+    ['1','1','1','1','1','1','1','1','1','1','1','1','1','2.1'],
+    ['1.5','1','1','1','1','1','1','1','1','1','1','1','1','1.6','1'],
+    ['1.7','1','1','1','1','1','1','1','1','1','1','1','2.4','1'],
+    ['2.1','1','1','1','1','1','1','1','1','1','1','1.3','1'],
+    ['1.3','1.3','1.3','5.8','1','1','1','1','1','1']
+  ];
+
+  int keycap_base = 60;
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
+      children: [
+        Row(children: _buildKeyboardKeys1(),),
+        Row(children: _buildKeyboardKeys2(),),
+        Row(children: _buildKeyboardKeys3(),),
+        Row(children: _buildKeyboardKeys4(),),
+        Row(children: _buildKeyboardKeys5(),),
+      ],
+    );
+  }
 
+  List<Widget> _buildKeyboardKeys1() {
+    return keyboard_key[0].map((key) => _buildKeyboardKey(key)).toList();
+  }
+  List<Widget> _buildKeyboardKeys2() {
+    return keyboard_key[1].map((key) => _buildKeyboardKey(key)).toList();
+  }
+  List<Widget> _buildKeyboardKeys3() {
+    return keyboard_key[2].map((key) => _buildKeyboardKey(key)).toList();
+  }
+  List<Widget> _buildKeyboardKeys4() {
+    return keyboard_key[3].map((key) => _buildKeyboardKey(key)).toList();
+  }
+  List<Widget> _buildKeyboardKeys5() {
+    return keyboard_key[4].map((key) => _buildKeyboardKey(key)).toList();
+  }
+
+  Widget _buildKeyboardKey(String key) {
+
+    double keycap_w = 0;
+    double test1 = 0;
+
+    for(int i=0;i<5;i++){
+      if(keyboard_key[i].indexOf(key)!=-1){
+        keycap_w = keycap_base * double.parse(keyboard_cap_width[i][keyboard_key[i].indexOf(key)]);
+        test1 = double.parse(keyboard_cap_width[i][keyboard_key[i].indexOf(key)]);
+
+      }
+    }
+
+
+    return SizedBox(
+      width: keycap_w, // 按鍵寬度
+      height: 60,
+      child: Card(
+        child: Center(
+          child: Text(
+            key,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.black54
+            ),
+          ),
+        )
+      ),
     );
   }
 
