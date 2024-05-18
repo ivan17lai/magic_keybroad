@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 
+
+int test = 0;
+
 void main() async{
 
 
@@ -42,7 +45,8 @@ class _HomePageState extends State<HomePage> {
 
   double link_button_hight = 50;
 
-  String title_text = 'Magical KeyBoard';
+  //String title_text = 'Magical KeyBoard';
+  String title_text = 'Magical －';
 
   PageController _pageController = PageController();
 
@@ -56,7 +60,6 @@ class _HomePageState extends State<HomePage> {
   List<Icon> app_plus_icon = [Icon(Icons.type_specimen),Icon(Icons.class_outlined),Icon(Icons.auto_mode_sharp )];
 
   List<bool> app_plus_on = [true,false,false];
-
   @override
   Widget build(BuildContext context) {
 
@@ -242,10 +245,12 @@ class _HomePageState extends State<HomePage> {
                             height: 50,
                           ),
                           Container(
-                            padding: EdgeInsets.all(50),
-                            width: 1300,
+                            padding: EdgeInsets.only(left: 120,top: 40),
+                            width: 1500,
                             height: 700,
-                            child: keyboard(),
+                            child: Center(
+                              child: keyboard(),
+                            ),
                           )
                         ],
                       ),
@@ -363,12 +368,13 @@ class _HomePageState extends State<HomePage> {
                       ),
 
 
-                      //校正頁面
+
+                      //設定頁面 page3 03
 
                       Column(
                         children: [
                           Text(
-                            '請雙手離開鍵盤',
+                            '基礎設定',
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 20,
@@ -377,13 +383,10 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
 
-
-                      //設定頁面 page4 03
-
                       Column(
                         children: [
                           Text(
-                            '基礎設定',
+                            '進階設定',
                             style: TextStyle(
                               color: Colors.black54,
                               fontSize: 20,
@@ -423,32 +426,34 @@ class _keyboard extends State<keyboard> {
   List<List<String>> keyboard_key = [
     ['esc','f1','f2','f3','f4','f5','f6','f7','f8','f9','f10','f11','f12','back'],
     ['Tab','Q','W','E','R','T','Y','U','I','O','P','[{',']}','\\|','Del'],
-    ['Capslock','A','S','D','F','G','H','J','K','L',';:','\n','Enter','Paup'],
+    ['Capslock','A','S','D','F','G','H','J','K','L',';:','\'','Enter','Pup'],
     ['Shift','Z','X','C','V','B','N','M',',<','.>','\/？','Shift','上'],
     ['Ctrl','Win','Alt','Space','Alt','Fn','Ctrl','左','下','右']
   ];
 
   List<List<String>> keyboard_cap_width = [
     ['1','1','1','1','1','1','1','1','1','1','1','1','1','2.1'],
-    ['1.5','1','1','1','1','1','1','1','1','1','1','1','1','1.6','1'],
-    ['1.7','1','1','1','1','1','1','1','1','1','1','1','2.4','1'],
+    ['1.5','1','1','1','1','1','1','1','1','1','1','1','1','1.6','1.2'],
+    ['1.7','1','1','1','1','1','1','1','1','1','1','1','2.5','1.2'],
     ['2.1','1','1','1','1','1','1','1','1','1','1','1.3','1'],
-    ['1.3','1.3','1.3','5.8','1','1','1','1','1','1']
+    ['1.3','1.3','1.3','6.1','1','1','1','1','1','1']
   ];
 
-  int keycap_base = 60;
+  int keycap_base = 65;
 
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(children: _buildKeyboardKeys1(),),
-        Row(children: _buildKeyboardKeys2(),),
-        Row(children: _buildKeyboardKeys3(),),
-        Row(children: _buildKeyboardKeys4(),),
-        Row(children: _buildKeyboardKeys5(),),
-      ],
+    return Center(
+      child: Column(
+        children: [
+          Row(children: _buildKeyboardKeys1(),),
+          Row(children: _buildKeyboardKeys2(),),
+          Row(children: _buildKeyboardKeys3(),),
+          Row(children: _buildKeyboardKeys4(),),
+          Row(children: _buildKeyboardKeys5(),),
+        ],
+      ),
     );
   }
 
@@ -482,20 +487,33 @@ class _keyboard extends State<keyboard> {
     }
 
 
-    return SizedBox(
+    return Container(
+      margin: EdgeInsets.all(3),
       width: keycap_w, // 按鍵寬度
-      height: 60,
-      child: Card(
+      height: 65,
+      child: ElevatedButton(
         child: Center(
           child: Text(
-            key,
+              key,
             style: TextStyle(
-              fontSize: 14,
-              color: Colors.black54
+                fontSize: 11,
+                color: Colors.black54
             ),
           ),
-        )
-      ),
+        ),
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+          ),
+        ),
+        onPressed: (){
+          setState(() {
+
+          });
+        },
+      )
     );
   }
 
