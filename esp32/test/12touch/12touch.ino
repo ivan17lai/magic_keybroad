@@ -8,7 +8,7 @@
 
 Adafruit_MPR121 cap = Adafruit_MPR121();
 
-int baseValue[6][12];
+int baseValue[12];
 
 
 
@@ -22,6 +22,8 @@ void PCA9548A(uint8_t bus){
 
 void setup() {
   
+  Wire.begin();
+
   Serial.begin(115200);
   while (!Serial);
   
@@ -62,12 +64,12 @@ void loop() {
   Serial.print("c0");
   for (uint8_t i = 0; i < 12; i++) {
     uint16_t touchVal = cap.filteredData(i);
-    // if (abs(touchVal-baseValue[i]) > change_max){
-    //   Serial.print("T");
-    // }else{
-    //   Serial.print("/");
-    // }
-    Serial.print(touchVal);
+    if (abs(touchVal-baseValue[i]) > change_max){
+      Serial.print("T");
+    }else{
+      Serial.print("/");
+    }
+    //Serial.print(touchVal);
     Serial.print(",");
   }
   Serial.print(" ");
