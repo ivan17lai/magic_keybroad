@@ -56,28 +56,32 @@ void setup() {
 
 
 int change_max =7;
-
+String bit_data;
 
 void loop() {
   
   for(int n=0;n<6;n++){
     PCA9548A(n);
-    Serial.print("c");
-    Serial.print(n);
-    Serial.print(":");
+    //Serial.print("c");
+    //Serial.print(n);
+    //Serial.print(":");
     for (uint8_t i = 0; i < 12; i++) {
       uint16_t touchVal = cap.filteredData(i);
       if (abs(touchVal-baseValue[n][i]) > change_max){
-        Serial.print("T");
+        bit_data += '1';
+        //Serial.print("T");
       }else{
-        Serial.print("/");
+        bit_data += '0';
+        //Serial.print("/");
       }
       //Serial.print(touchVal);
-      Serial.print(",");
+      //Serial.print(",");
     }
-    Serial.print(" ");
+    //bit_data += '/';
+    //Serial.print(" ");
 
   }
-  Serial.println("");
-  
+  Serial.println( (bit_data) );
+  bit_data = "";
+
 }
