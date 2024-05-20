@@ -1,5 +1,10 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import 'dart:convert';
+import 'dart:async';
 
 
 int test = 0;
@@ -416,104 +421,152 @@ class keyboard extends StatefulWidget{
   @override
   State<keyboard> createState() => _keyboard();
 }
+List<List<String>> keyboard_key = [
+  ['esc','f1','f2','f3','f4','f5','f6','f7','f8','f9','f10','f11','f12','back'],
+  ['Tab','Q','W','E','R','T','Y','U','I','O','P','[{',']}','\\|','Del'],
+  ['Capslock','A','S','D','F','G','H','J','K','L',';:','\'','Enter','Pup'],
+  ['Shift','Z','X','C','V','B','N','M',',<','.>','\/？','Shift','上'],
+  ['Ctrl','Win','Alt','Space','Alt','Fn','Ctrl','左','下','右']
+];
 
+List<List<String>> keyboard_cap_width = [
+  ['1','1','1','1','1','1','1','1','1','1','1','1','1','2.1'],
+  ['1.5','1','1','1','1','1','1','1','1','1','1','1','1','1.6','1.2'],
+  ['1.7','1','1','1','1','1','1','1','1','1','1','1','2.5','1.2'],
+  ['2.1','1','1','1','1','1','1','1','1','1','1','1.3','1'],
+  ['1.3','1.3','1.3','6.1','1','1','1','1','1','1']
+];
 class _keyboard extends State<keyboard> {
 
 
+  late Stream<String> timerStream;
 
-
-
-  List<List<String>> keyboard_key = [
-    ['esc','f1','f2','f3','f4','f5','f6','f7','f8','f9','f10','f11','f12','back'],
-    ['Tab','Q','W','E','R','T','Y','U','I','O','P','[{',']}','\\|','Del'],
-    ['Capslock','A','S','D','F','G','H','J','K','L',';:','\'','Enter','Pup'],
-    ['Shift','Z','X','C','V','B','N','M',',<','.>','\/？','Shift','上'],
-    ['Ctrl','Win','Alt','Space','Alt','Fn','Ctrl','左','下','右']
-  ];
-
-  List<List<String>> keyboard_cap_width = [
-    ['1','1','1','1','1','1','1','1','1','1','1','1','1','2.1'],
-    ['1.5','1','1','1','1','1','1','1','1','1','1','1','1','1.6','1.2'],
-    ['1.7','1','1','1','1','1','1','1','1','1','1','1','2.5','1.2'],
-    ['2.1','1','1','1','1','1','1','1','1','1','1','1.3','1'],
-    ['1.3','1.3','1.3','6.1','1','1','1','1','1','1']
-  ];
+  List<List<int>> keyboard_colors = List.generate(5, (index) => List.filled(keyboard_key[index].length, 0));
 
   int keycap_base = 65;
+  Stream<String> getTimerStream() async* {
+    final response = await http.get(Uri.parse('http://127.0.0.1:9003/get_data'));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      yield data['data'].toString();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    timerStream = getTimerStream();
+    Timer.periodic(Duration(milliseconds: 10), (timer) {
+      _updateKeyboardColors();
+      print('update');
+      setState(() {
+
+      });
+    });
+  }
+
+
+
+  void _updateKeyboardColors() async {
+    final response = await http.get(Uri.parse('http://127.0.0.1:9003/get_data'));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      List<int> keyboardStatus = data['data'].toString().split('').map(int.parse).toList();
+      setState(() {
+        for (int i = 0; i < keyboardStatus.length; i++) {
+          int color = keyboardStatus[i] == 0 ? (Colors.cyan).value : Colors.cyanAccent.value; // 根据键盘状态设置颜色
+          int row = i ~/ keyboard_key[0].length;
+          int col = i % keyboard_key[0].length;
+          keyboard_colors[row][col] = color;
+        }
+      });
+    }
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          Row(children: _buildKeyboardKeys1(),),
-          Row(children: _buildKeyboardKeys2(),),
-          Row(children: _buildKeyboardKeys3(),),
-          Row(children: _buildKeyboardKeys4(),),
-          Row(children: _buildKeyboardKeys5(),),
-        ],
-      ),
+    // 在这里使用 keyboard_key
+    return StreamBuilder<String>(
+      stream: timerStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('未連接: ${snapshot.error}');
+        }
+
+        return Center(
+          child: Column(
+            children: [
+              Row(children: _buildKeyboardKeys1(),),
+              Row(children: _buildKeyboardKeys2(),),
+              Row(children: _buildKeyboardKeys3(),),
+              Row(children: _buildKeyboardKeys4(),),
+              Row(children: _buildKeyboardKeys5(),),
+            ],
+          ),
+        );
+
+      },
     );
   }
 
+
   List<Widget> _buildKeyboardKeys1() {
-    return keyboard_key[0].map((key) => _buildKeyboardKey(key)).toList();
+    return List.generate(keyboard_key[0].length, (col) => _buildKeyboardKey(keyboard_key[0][col], 0, col));
   }
+
   List<Widget> _buildKeyboardKeys2() {
-    return keyboard_key[1].map((key) => _buildKeyboardKey(key)).toList();
+    return List.generate(keyboard_key[1].length, (col) => _buildKeyboardKey(keyboard_key[1][col], 1, col));
   }
+
   List<Widget> _buildKeyboardKeys3() {
-    return keyboard_key[2].map((key) => _buildKeyboardKey(key)).toList();
+    return List.generate(keyboard_key[2].length, (col) => _buildKeyboardKey(keyboard_key[2][col], 2, col));
   }
+
   List<Widget> _buildKeyboardKeys4() {
-    return keyboard_key[3].map((key) => _buildKeyboardKey(key)).toList();
+    return List.generate(keyboard_key[3].length, (col) => _buildKeyboardKey(keyboard_key[3][col], 3, col));
   }
+
   List<Widget> _buildKeyboardKeys5() {
-    return keyboard_key[4].map((key) => _buildKeyboardKey(key)).toList();
+    return List.generate(keyboard_key[4].length, (col) => _buildKeyboardKey(keyboard_key[4][col], 4, col));
   }
 
-  Widget _buildKeyboardKey(String key) {
 
-    double keycap_w = 0;
-    double test1 = 0;
-
-    for(int i=0;i<5;i++){
-      if(keyboard_key[i].indexOf(key)!=-1){
-        keycap_w = keycap_base * double.parse(keyboard_cap_width[i][keyboard_key[i].indexOf(key)]);
-        test1 = double.parse(keyboard_cap_width[i][keyboard_key[i].indexOf(key)]);
-
-      }
-    }
-
+  Widget _buildKeyboardKey(String key, int row, int col) {
+    double keycap_w = keycap_base * double.parse(keyboard_cap_width[row][col]);
 
     return Container(
       margin: EdgeInsets.all(3),
       width: keycap_w, // 按鍵寬度
       height: 65,
       child: ElevatedButton(
-        child: Center(
-          child: Text(
-              key,
-            style: TextStyle(
-                fontSize: 11,
-                color: Colors.black54
-            ),
-          ),
-        ),
         style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+            return Color(keyboard_colors[row][col]);
+          }),
           shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
             ),
           ),
         ),
-        onPressed: (){
-          setState(() {
 
-          });
+        onPressed: () {
+            setState(() {
+
+            });
+
         },
-      )
+        child: Center(
+          child: Text(
+            key,
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.black54,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
