@@ -468,10 +468,11 @@ class _keyboard extends State<keyboard> {
 
 
   void _updateKeyboardColors() async {
-    final response = await http.get(Uri.parse('http://127.0.0.1:9003/get_data'));
+    final response = await http.get(Uri.parse('http://192.168.11.68:9003/get_data'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       List<int> keyboardStatus = data['data'].toString().split('').map(int.parse).toList();
+      print(data['data'].toString());
       setState(() {
         for (int i = 0; i < keyboardStatus.length; i++) {
           int color = keyboardStatus[i] == 0 ? (Colors.cyan).value : Colors.cyanAccent.value; // 根据键盘状态设置颜色
@@ -480,6 +481,9 @@ class _keyboard extends State<keyboard> {
           keyboard_colors[row][col] = color;
         }
       });
+    }else{
+      print('---------------');
+      print(response.statusCode );
     }
   }
 

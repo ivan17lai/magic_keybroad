@@ -9,6 +9,7 @@ app = Flask(__name__)
 latest_data = ""
 ser = None
 
+
 def initialize_serial(port, baudrate):
     global ser
     if ser is None:
@@ -33,10 +34,10 @@ def read_from_serial():
 
 
             latest_data = line
-            #print(keyboard.is_pressed('ctrl'))        
-            if(keyboard.is_pressed('ctrl')):
-                if(line[19]=='1'):
-                    print('全部選取')
+            print(line)  
+
+            if(line[19]=='1'):
+                print('全部選取')
 
 
 
@@ -46,7 +47,7 @@ def get_data():
 
 if __name__ == '__main__':
     # 初始化序列埠
-    port = 'COM5'  # 將 'COM5' 替換為你的序列埠名稱
+    port = '/dev/cu.usbserial-10'  # 將 'COM5' 替換為你的序列埠名稱
     baudrate = 115200  # 波特率
     initialize_serial(port, baudrate)
 
