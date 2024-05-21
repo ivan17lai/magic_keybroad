@@ -79,16 +79,62 @@ def read_serial():
                     text_box.insert(tk.END, '複製\n')
                 elif line[33] == '1':
                     text_box.insert(tk.END, '貼上\n')
-                elif line[18] == '1':
-                    text_box.insert(tk.END, '儲存\n')
                 elif line[21] == '1':
                     text_box.insert(tk.END, '還原\n')
+                elif line[39] == '1':
+                    text_box.insert(tk.END, '開啟文件\n')
+                elif line[47] == '1':
+                    text_box.insert(tk.END, '新建文件\n')
+                elif line[18] == '1':
+                    text_box.insert(tk.END, '儲存\n')
+                elif line[16] == '1':
+                    text_box.insert(tk.END, '關閉文件\n')
+                elif line[20] == '1':
+                    text_box.insert(tk.END, '剪下\n')
+                elif line[32] == '1':
+                    text_box.insert(tk.END, '+粗體\n')
+                elif line[42] == '1':
+                    text_box.insert(tk.END, '斜體\n')
+                elif line[41] == '1':
+                    text_box.insert(tk.END, '+底線\n')
+                # elif line[50] == '1':
+                #     text_box.insert(tk.END, '字體縮小\n')
+                # elif line[64] == '1':
+                #     text_box.insert(tk.END, '字體放大\n')
+                elif line[15] == '1':
+                    text_box.insert(tk.END, '文字置中\n')
+                elif line[54] == '1':
+                    text_box.insert(tk.END, '靠左對齊\n')
+                elif line[28] == '1':
+                    text_box.insert(tk.END, '靠右對齊\n')
+                elif line[26] == '1':
+                    text_box.insert(tk.END, '取消復原\n')
+
+            
+
+                elif keyboard.is_pressed('shift'):
+                    if line[0] == '1':
+                        text_box.insert(tk.END, '工作管理員\n')
+
+
                 root.wm_attributes("-alpha", 0.8)
+
 
             elif keyboard.is_pressed('alt'):
                 root.wm_attributes("-alpha", 0.9)
+
+
                 if line[1] == '1':
                     text_box.insert(tk.END, '切換視窗\n')
+
+            elif keyboard.is_pressed('shift'):
+                root.wm_attributes("-alpha", 0.9)
+
+                
+                if line[35] == '1':
+                    text_box.insert(tk.END, '全\半形\n')
+
+
             else:
                 root.wm_attributes("-alpha", 0)
 
@@ -97,3 +143,4 @@ def read_serial():
 threading.Thread(target=read_serial, daemon=True).start()
 
 root.mainloop()
+
